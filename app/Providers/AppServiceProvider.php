@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('channels', $channels);
         });
+
+        if (app()->isLocal()) {
+            $this->app->register(\VIACreative\SudoSu\ServiceProvider::class);
+        }
     }
 
     /**

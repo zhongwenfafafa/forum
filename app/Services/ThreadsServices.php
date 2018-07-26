@@ -10,6 +10,7 @@ class ThreadsServices
 {
     public function getThreads(Channel $channel, ThreadsFilters $filters)
     {
+        // 接受返回的模型查询构建器
         $threads = Thread::latest()->filter($filters);
 
         if ($channel->exists) {

@@ -37,6 +37,10 @@
         <flash message="{{ session('flash') }}"></flash>
     </div>
 
+    @if (app()->isLocal())
+        @include('sudosu::user-selector')
+    @endif
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

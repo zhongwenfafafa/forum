@@ -14,6 +14,8 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('paginator', require('./components/Paginator/Paginator.vue'));
+
 import Flash from './components/Reply/Flash'
 import ThreadView from './pages/Thread/Thread'
 
