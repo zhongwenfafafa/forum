@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Channel;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Carbon::setLocale('zh');
+        \View::composer('*', function ($view) {
+            $channels = \Cache::rememberForever('channels', function () {
+                return Channel::all();
+            });
+
+            $view->with('channels', $channels);
+        });
     }
 
     /**
