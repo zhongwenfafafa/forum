@@ -15,6 +15,7 @@ require('./bootstrap');
  */
 
 Vue.component('paginator', require('./components/Paginator/Paginator.vue'));
+Vue.component('user-notifications', require('./components/User/UserNotifications.vue'));
 
 import Flash from './components/Reply/Flash'
 import ThreadView from './pages/Thread/Thread'

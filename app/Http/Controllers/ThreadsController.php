@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filters\ThreadsFilters;
 use App\Http\Requests\ThreadsRequest;
+use App\Inspections\Spam;
 use App\Models\Channel;
 use App\Models\Thread;
 use App\Services\ThreadsServices;
@@ -29,6 +30,10 @@ class ThreadsController extends Controller
 
     public function show($channelId, Thread $thread)
     {
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
+
         return view('threads.show', compact('thread'));
     }
 
@@ -37,9 +42,10 @@ class ThreadsController extends Controller
         return view('threads.create');
     }
 
-    public function store(ThreadsRequest $request)
+    public function store(ThreadsRequest $request, Spam $spam)
     {
         $data = $request->all();
+
         $thread = Thread::create(array_merge($data, ['user_id' => auth()->id()]));
 
         return redirect($thread->path())->with('flash', 'Your thread has been published!');

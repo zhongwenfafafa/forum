@@ -4,11 +4,11 @@
 
 <script>
     import Replies from '../../components/Reply/Replies'
-    import Sidebar from '../../components/Reply/Sidebar'
+    import SubscribeButton from '../../components/Thread/SubscribeButton'
 
     export default {
         components: {
-            Replies, Sidebar
+            Replies, SubscribeButton
         },
         props: ['initialRepliesCount'],
 

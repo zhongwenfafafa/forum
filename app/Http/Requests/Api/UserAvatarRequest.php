@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Gate;
 
-class ReliesRequest extends FormRequest
+class UserAvatarRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,6 @@ class ReliesRequest extends FormRequest
      */
     public function authorize()
     {
-        /*return Gate::allows('create', new \App\Models\Reply);*/
         return true;
     }
 
@@ -26,15 +24,15 @@ class ReliesRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => 'required|spamfree'
+            'avatar' => 'required|image'
         ];
     }
 
     public function messages()
     {
         return [
-            'body.required' => '回复内容不能为空',
-            'body.spamfree' => '含有不合法内容',
+            'avatar.required' => '上传头像文件不能不为空',
+            'avatar.image' => '文件格式不是图片类型',
         ];
     }
 }

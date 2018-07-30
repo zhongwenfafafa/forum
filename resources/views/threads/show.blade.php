@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('header')
+    <link rel="stylesheet" type="text/css" href="/css/vendor/jquery.atwho.css">
+@endsection
+
 @section('content')
     <thread-view inline-template :initial-replies-count="{{ $thread->replies_count }}">
         <div class="container">
@@ -31,7 +35,19 @@
 
                 </div>
                 <div class="col-md-4">
-                    <sidebar :data="{{ $thread->creator }}" :count="repliesCount"></sidebar>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p>
+                                This thread was published {{ $thread->created_at->diffForHumans() }} by
+                                <a href="#">{{ $thread->creator->name }}</a>,and currently
+                                has <span v-text="repliesCount"></span> {{ str_plural('comment',$thread->replies_count) }}
+                            </p>
+
+                            <p>
+                                <subscribe-button :active="{{ json_encode($thread->isSubscribedTo) }}"></subscribe-button>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

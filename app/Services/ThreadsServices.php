@@ -17,7 +17,7 @@ class ThreadsServices
             $threads->where('channel_id', $channel->id);
         }
 
-        $threads = $threads->get();
+        $threads = $threads->paginate(20);
 
         return $threads;
     }

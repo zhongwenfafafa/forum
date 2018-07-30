@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReliesRequest;
 use App\Models\Reply;
 use App\Models\Thread;
+use App\Inspections\Spam;
 use Illuminate\Http\Request;
 
 class RepliesController extends Controller
@@ -19,8 +20,10 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(10);
     }
 
-    public function store(ReliesRequest $request, $channelId, Thread $thread)
+    public function store(ReliesRequest $request, $channelId, Thread $thread, Spam $spam)
     {
+        $this->authorize('create', new Reply());
+
         $reply =$thread->addReply([
             'body' => $request->body,
             'user_id' => auth()->id(),
@@ -29,11 +32,9 @@ class RepliesController extends Controller
         if ($request->expectsJson()) {
             return $reply->load('owner');
         }
-
-        return back()->with('flash', 'Your reply has been left.');
     }
 
-    public function update(Reply $reply, ReliesRequest $request)
+    public function update(Reply $reply, ReliesRequest $request, Spam $spam)
     {
         $this->authorize('update', $reply);
 

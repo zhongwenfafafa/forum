@@ -17,6 +17,7 @@ class CreateThreadsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->comment('关联用户id');
             $table->unsignedInteger('channel_id')->comment('关联频道id');
+            $table->unsignedInteger('replies_count')->default(0)->comment('回复数量');
             $table->string('title')->comment('标题');
             $table->text('body')->comment('内容');
             $table->timestamps();

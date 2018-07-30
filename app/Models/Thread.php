@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Events\ThreadHasNewReply;
+use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\RecordsActivity;
+use App\Notifications\ThreadWasUpdated;
 
 class Thread extends Model
 {
@@ -13,13 +16,11 @@ class Thread extends Model
     protected $table = 'threads';
     protected $with = ['creator', 'channel'];
     protected static $recordEvents = ['created'];
+    protected $appends = ['isSubscribedTo'];
 
     protected static function boot()
     {
         parent::boot();
-        static::addGlobalScope('replyCount', function ($builder) {
-            $builder->withCount('replies');
-        });
 
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
@@ -43,7 +44,19 @@ class Thread extends Model
 
     public function addReply($reply)
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($reply);
+
+        event(new ThreadReceivedNewReply($reply));
+
+        return $reply;
+    }
+
+    public function notifySubscribers($reply)
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 
     public function channel()
@@ -54,5 +67,47 @@ class Thread extends Model
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
+    }
+
+    /**
+     * 创建订阅
+     *
+     * @param null $userId
+     */
+    public function subscript($userId = null)
+    {
+        $this->subscriptions()->create([
+            'user_id' => $userId ?: auth()->id(),
+        ]);
+
+        return $this;
+    }
+
+    public function unsubscribe($userId = null)
+    {
+        $this->subscriptions()
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
+
+        return $this;
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function getIsSubscribedToAttribute()
+    {
+        return $this->subscriptions()
+            ->where('user_id', auth()->id())
+            ->exists();
+    }
+
+    public function hasUpdatedFor($user)
+    {
+        $key = $user->visitedThreadCacheKey($this);
+
+        return $this->updated_at > cache($key);
     }
 }
