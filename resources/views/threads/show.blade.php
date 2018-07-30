@@ -12,10 +12,11 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="level">
-                            <span class="flex">
-                                <a href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a> 发表了:
-                                {{ $thread->title }}
-                            </span>
+                                <img src="{{ $thread->creator->avatar_path }}" alt="{{ $thread->creator->name }}" width="25" height="25" class="mr-1">
+                                <span class="flex">
+                                    <a href="{{ route('profiles.show', $thread->creator) }}">{{ $thread->creator->name }}</a> 发表了:
+                                    {{ $thread->title }}
+                                </span>
                                 @can('update', $thread)
                                     <form action="{{ $thread->path() }}" method="post">
                                         {{ csrf_field() }}

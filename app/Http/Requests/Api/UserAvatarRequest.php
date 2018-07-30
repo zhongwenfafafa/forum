@@ -24,7 +24,7 @@ class UserAvatarRequest extends FormRequest
     public function rules()
     {
         return [
-            'avatar' => 'required|image'
+            'avatar' => 'required|mimes:jpeg,bmp,png,gif|dimensions:min_width=200,min_height=200'
         ];
     }
 
@@ -32,7 +32,8 @@ class UserAvatarRequest extends FormRequest
     {
         return [
             'avatar.required' => '上传头像文件不能不为空',
-            'avatar.image' => '文件格式不是图片类型',
+            'avatar.mimes' =>'头像必须是 jpeg, bmp, png, gif 格式的图片',
+            'avatar.dimensions' => '图片的清晰度不够，宽和高需要 200px 以上',
         ];
     }
 }

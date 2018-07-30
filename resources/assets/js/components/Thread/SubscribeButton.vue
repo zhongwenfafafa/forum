@@ -1,10 +1,16 @@
 <template>
-    <button :class="classes" @click="subscribe">Subscribe</button>
+    <button :class="classes" @click="subscribe" v-show="isShow">Subscribe</button>
 </template>
 
 <script>
     export default {
         props: ['active'],
+
+        data () {
+            return {
+                isShow: window.App.user
+            };
+        },
 
         computed: {
             classes () {
